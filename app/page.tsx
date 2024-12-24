@@ -75,12 +75,12 @@ export default function Home() {
       topMessages,
       topSentConversations: topSentConversations.map((conversation) => ({
         data: conversation,
-        contact: contacts.get(conversation[1] as string),
+        contact: contacts.get(conversation[1] as string) ?? conversation[1],
       })),
       topReceivedConversations: topReceivedConversations.map(
         (conversation) => ({
           data: conversation,
-          contact: contacts.get(conversation[1] as string),
+          contact: contacts.get(conversation[1] as string) ?? conversation[1],
         })
       ),
     };
