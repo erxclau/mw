@@ -166,7 +166,7 @@ export default function Home() {
 
         <Stage stage={0} onComplete={() => setStage(1)}>
           <div className="text-white text-2xl text-balance">
-            Your conversations during 2024 included{" "}
+            Your conversations from 2024 included{" "}
             <Counter number={results?.totalMessages} /> texts.
           </div>
           <Button delay={3000} onClick={() => setShown(1)}>
