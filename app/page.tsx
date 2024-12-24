@@ -343,15 +343,3 @@ function Button({
     </button>
   );
 }
-
-// https://messageswrapped.com/website-promo.mp4
-// Your #1 texting obsession X You sent them X messages. That's X% of all your texts this year
-// TODO: Who you text the most NAME X Messages sent table
-// TODO: This person sent you the most messages
-
-// TODO: DOWN BAD HOURS 12:00 AM - 4:00 AM Someone couldn't get you off their mind
-// TODO: You got left on read... X times
-// TODO: You typed a total of X characters...
-// TODO: Most used words
-// TODO: Your messages reached X people this year
-// TODO: Your most used emojis
