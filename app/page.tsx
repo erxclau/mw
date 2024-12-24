@@ -162,7 +162,7 @@ export default function Home() {
           />
           <small className="text-white">
             <a
-              href="https://support.apple.com/guide/mac-help/go-directly-to-a-specific-folder-on-mac-mchlp1236/mac"
+              href="https://discussions.apple.com/thread/254002152"
               className="underline decoration-dashed"
             >
               Don&apos;t see your Library folder?
