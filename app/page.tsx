@@ -131,7 +131,7 @@ export default function Home() {
         >
           <Input
             label="Upload your messages"
-            hint="Users/username/Library/Messages/chat.db"
+            hint="Users/*/Library/Messages/chat.db"
             accept=".db"
             onUpload={(buffer) => {
               if (sql.current === null) {
@@ -149,7 +149,7 @@ export default function Home() {
           />
           <Input
             label="Upload your contacts"
-            hint="Users/username/Library/Application Support/AddressBook/Sources/*/AddressBook-v22.abcddb"
+            hint="Users/*/Library/Application Support/AddressBook/Sources/*/AddressBook-v22.abcddb"
             accept=".abcddb"
             onUpload={(buffer) => {
               if (sql.current === null) {
