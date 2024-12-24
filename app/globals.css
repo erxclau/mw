@@ -2,20 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+.stage {
+  transition: opacity 500ms ease-out, transform 500ms ease-out;
+  opacity: 1;
+  transform: translateY(0);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @starting-style {
+    opacity: 0;
+    transform: translateY(250px);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.fade {
+  opacity: 1;
+  transition: opacity 500ms ease-out;
+  pointer-events: all;
+
+  @starting-style {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
