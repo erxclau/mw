@@ -293,13 +293,7 @@ export default function Home() {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <p className="text-white text-2xl text-balance">
-                You received{" "}
-                {numberFormatter.format(
-                  (results?.topReceivedConversations[0].data[2] as
-                    | number
-                    | undefined) ?? 0
-                )}{" "}
-                messages from...
+                You received the most from...
               </p>
               <p
                 className="text-white text-4xl fade font-bold"
@@ -311,7 +305,13 @@ export default function Home() {
                 className="text-white text-2xl fade"
                 style={{ transitionDelay: "2s" }}
               >
-                That&apos;s the most of your conversations in 2024.
+                They sent you{" "}
+                {numberFormatter.format(
+                  (results?.topReceivedConversations[0].data[2] as
+                    | number
+                    | undefined) ?? 0
+                )}{" "}
+                messages
               </p>
             </div>
             <div className="fade" style={{ transitionDelay: "3s" }}>
