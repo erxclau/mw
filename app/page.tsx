@@ -30,6 +30,23 @@ export default function Home() {
       });
   }, []);
 
+  type Results = {
+    totalMessages: number;
+    totalSentMessages: number;
+    totalSentMessagesPreviousYear: number;
+    change: number;
+    changeDirection: "increase" | "decrease";
+    topMessages: Array<[string, number]>;
+    topSentConversations: Array<{
+      data: [string, string, number];
+      contact: string;
+    }>;
+    topReceivedConversations: Array<{
+      data: [string, string, number];
+      contact: string;
+    }>;
+  };
+
   const results = useMemo(() => {
     if (messages === undefined || contacts === undefined) {
       return null;
@@ -37,13 +54,13 @@ export default function Home() {
 
     const [
       {
-        values: [[totalMessages]],
+        values: [[tm]],
       },
       {
-        values: [[totalSentMessages]],
+        values: [[tsm]],
       },
       {
-        values: [[totalSentMessagesPreviousYear]],
+        values: [[tsmpy]],
       },
       { values: topMessages },
       { values: topSentConversations },
@@ -53,44 +70,46 @@ export default function Home() {
       SELECT COUNT(*) FROM messages_2024 WHERE is_from_me = 1;
       SELECT COUNT(*) FROM message WHERE strftime('%Y', date / 1000000000, 'unixepoch', '+31 years') = '2023' AND is_from_me = 1;
       SELECT trim(text), COUNT(*) FROM messages_2024 WHERE is_from_me = 1 AND text IS NOT NULL AND length(trim(text)) > 0 GROUP BY trim(text) ORDER BY COUNT(*) DESC LIMIT 1;
-      SELECT c.group_id, c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 1 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5;
-      SELECT c.group_id, c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 0 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5
+      SELECT c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 1 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5;
+      SELECT c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 0 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5
     `);
 
+    const totalMessages = tm as number;
+    const totalSentMessages = tsm as number;
+    const totalSentMessagesPreviousYear = tsmpy as number;
+
     const change =
-      (((totalSentMessages as number) -
-        (totalSentMessagesPreviousYear as number)) /
-        (totalSentMessagesPreviousYear as number)) *
+      ((totalSentMessages - totalSentMessagesPreviousYear) /
+        totalSentMessagesPreviousYear) *
       100;
 
-    return {
-      totalMessages: totalMessages as number,
-      totalSentMessages: totalSentMessages as number,
-      totalSentMessagesPreviousYear: totalSentMessagesPreviousYear as number,
+    const results = {
+      totalMessages,
+      totalSentMessages,
+      totalSentMessagesPreviousYear,
       change,
       changeDirection:
-        (totalSentMessages as number) >
-        (totalSentMessagesPreviousYear as number)
+        totalSentMessages > totalSentMessagesPreviousYear
           ? "increase"
           : "decrease",
-      topMessages,
-      topSentConversations: topSentConversations.map((conversation) => ({
-        data: conversation,
-        contact:
-          contacts.get(conversation[1] as string) ||
-          conversation[2] ||
-          conversation[1],
-      })),
-      topReceivedConversations: topReceivedConversations.map(
-        (conversation) => ({
-          data: conversation,
-          contact:
-            contacts.get(conversation[1] as string) ||
-            conversation[2] ||
-            conversation[1],
-        })
-      ),
+      topMessages: topMessages as Array<[string, number]>,
+      topSentConversations: topSentConversations.map((conversation) => {
+        const c = conversation as [string, string, number];
+        return {
+          data: c,
+          contact: contacts.get(c[0]) || c[1] || c[0],
+        };
+      }),
+      topReceivedConversations: topReceivedConversations.map((conversation) => {
+        const c = conversation as [string, string, number];
+        return {
+          data: c,
+          contact: contacts.get(c[0]) || c[1] || c[0],
+        };
+      }),
     };
+
+    return results as Results;
   }, [messages, contacts]);
 
   useEffect(() => {
@@ -217,11 +236,7 @@ export default function Home() {
               style={{ transitionDelay: "2s" }}
             >
               You sent it{" "}
-              <b>
-                {numberFormatter.format(
-                  (results?.topMessages[0][1] as number | undefined) ?? 0
-                )}
-              </b>{" "}
+              <b>{numberFormatter.format(results?.topMessages[0][1] ?? 0)}</b>{" "}
               times this year.
             </p>
           </div>
@@ -234,7 +249,7 @@ export default function Home() {
               <p className="text-white text-2xl text-balance">
                 You sent{" "}
                 {numberFormatter.format(
-                  (results?.topSentConversations[0].data[3] as
+                  (results?.topSentConversations[0].data[2] as
                     | number
                     | undefined) ?? 0
                 )}{" "}
@@ -263,9 +278,7 @@ export default function Home() {
                     >
                       <div>{conversation.contact}</div>
                       <small>
-                        {numberFormatter.format(
-                          (conversation.data[3] as number | undefined) ?? 0
-                        )}
+                        {numberFormatter.format(conversation.data[2] ?? 0)}
                       </small>
                     </li>
                   );
@@ -282,7 +295,7 @@ export default function Home() {
               <p className="text-white text-2xl text-balance">
                 You received{" "}
                 {numberFormatter.format(
-                  (results?.topReceivedConversations[0].data[3] as
+                  (results?.topReceivedConversations[0].data[2] as
                     | number
                     | undefined) ?? 0
                 )}{" "}
@@ -298,7 +311,7 @@ export default function Home() {
                 className="text-white text-2xl fade"
                 style={{ transitionDelay: "2s" }}
               >
-                That&apos;s the most your conversations in 2024.
+                That&apos;s the most of your conversations in 2024.
               </p>
             </div>
             <div className="fade" style={{ transitionDelay: "3s" }}>
@@ -311,9 +324,7 @@ export default function Home() {
                     >
                       <div>{conversation.contact}</div>
                       <small>
-                        {numberFormatter.format(
-                          (conversation.data[3] as number | undefined) ?? 0
-                        )}
+                        {numberFormatter.format(conversation.data[2] ?? 0)}
                       </small>
                     </li>
                   );
