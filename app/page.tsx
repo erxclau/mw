@@ -75,12 +75,18 @@ export default function Home() {
       topMessages,
       topSentConversations: topSentConversations.map((conversation) => ({
         data: conversation,
-        contact: contacts.get(conversation[1] as string) ?? conversation[1],
+        contact:
+          contacts.get(conversation[1] as string) ||
+          conversation[2] ||
+          conversation[1],
       })),
       topReceivedConversations: topReceivedConversations.map(
         (conversation) => ({
           data: conversation,
-          contact: contacts.get(conversation[1] as string) ?? conversation[1],
+          contact:
+            contacts.get(conversation[1] as string) ||
+            conversation[2] ||
+            conversation[1],
         })
       ),
     };
@@ -105,7 +111,7 @@ export default function Home() {
         >
           <Input
             label="Upload your messages"
-            hint="Library/Messages/chat.db"
+            hint="Users/username/Library/Messages/chat.db"
             accept=".db"
             onUpload={(buffer) => {
               if (sql.current === null) {
@@ -123,7 +129,7 @@ export default function Home() {
           />
           <Input
             label="Upload your contacts"
-            hint="Library/Application Support/AddressBook/Sources/"
+            hint="Users/username/Library/Application Support/AddressBook/Sources/*/AddressBook-v22.abcddb"
             accept=".abcddb"
             onUpload={(buffer) => {
               if (sql.current === null) {
@@ -249,7 +255,7 @@ export default function Home() {
                 {results?.topSentConversations.map((conversation) => {
                   return (
                     <li
-                      key={conversation.contact}
+                      key={String(conversation.contact)}
                       className="text-white text-xl"
                     >
                       <div>{conversation.contact}</div>
