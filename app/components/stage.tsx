@@ -1,5 +1,5 @@
 import { use, useState, type ReactNode } from "react";
-import { StageContext } from "./context";
+import { StageContext } from "@/app/context";
 
 export default function Stage({
   children,

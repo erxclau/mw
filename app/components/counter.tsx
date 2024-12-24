@@ -3,7 +3,7 @@ import { select } from "d3-selection";
 import { interpolate } from "d3-interpolate";
 import "d3-transition";
 
-import { numberFormatter } from "./format";
+import { numberFormatter } from "@/app/format";
 
 export default function Counter({ number }: { number: number | undefined }) {
   const ref = useRef<HTMLDivElement>(null);

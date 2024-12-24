@@ -1,11 +1,12 @@
 "use client";
 
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SQLJS, { type Database } from "sql.js";
 
-import Input from "./input";
-import Stage from "./stage";
-import Counter from "./counter";
+import Input from "./components/input";
+import Stage from "./components/stage";
+import Counter from "./components/counter";
+import Button from "./components/button";
 import { numberFormatter } from "./format";
 import { StageContext } from "./context";
 
@@ -321,25 +322,5 @@ export default function Home() {
         </Stage>
       </StageContext>
     </section>
-  );
-}
-
-function Button({
-  onClick,
-  delay,
-  children,
-}: {
-  onClick: () => void;
-  delay: number;
-  children?: ReactNode;
-}) {
-  return (
-    <button
-      className="fade font-bold w-fit px-5 py-2 uppercase text-white bg-gradient-to-tr from-cyan-400 via-purple-400 to-red-400 rounded-xl shadow-sm shadow-gray-500"
-      onClick={onClick}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children ?? "Next"}
-    </button>
   );
 }
