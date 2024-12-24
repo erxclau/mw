@@ -52,7 +52,7 @@ export default function Home() {
       SELECT COUNT(*) FROM messages_2024;
       SELECT COUNT(*) FROM messages_2024 WHERE is_from_me = 1;
       SELECT COUNT(*) FROM message WHERE strftime('%Y', date / 1000000000, 'unixepoch', '+31 years') = '2023' AND is_from_me = 1;
-      SELECT trim(text), COUNT(*) FROM messages_2024 WHERE is_from_me = 1 AND text IS NOT NULL AND length(trim(text)) > 0 GROUP BY trim(text) ORDER BY COUNT(*) DESC LIMIT 10;
+      SELECT trim(text), COUNT(*) FROM messages_2024 WHERE is_from_me = 1 AND text IS NOT NULL AND length(trim(text)) > 0 GROUP BY trim(text) ORDER BY COUNT(*) DESC LIMIT 5;
       SELECT c.group_id, c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 1 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5;
       SELECT c.group_id, c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 0 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5
     `);
@@ -253,6 +253,54 @@ export default function Home() {
             <div className="fade" style={{ transitionDelay: "3s" }}>
               <ol className="list-decimal">
                 {results?.topSentConversations.map((conversation) => {
+                  return (
+                    <li
+                      key={String(conversation.contact)}
+                      className="text-white text-xl"
+                    >
+                      <div>{conversation.contact}</div>
+                      <small>
+                        {numberFormatter.format(
+                          (conversation.data[3] as number | undefined) ?? 0
+                        )}
+                      </small>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+          </div>
+          <Button delay={3000} onClick={() => setShown(4)} />
+        </Stage>
+
+        <Stage stage={4} onComplete={() => setStage(4)}>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <p className="text-white text-2xl text-balance">
+                You received{" "}
+                {numberFormatter.format(
+                  (results?.topReceivedConversations[0].data[3] as
+                    | number
+                    | undefined) ?? 0
+                )}{" "}
+                messages from...
+              </p>
+              <p
+                className="text-white text-4xl fade font-bold"
+                style={{ transitionDelay: "2s" }}
+              >
+                {results?.topReceivedConversations[0].contact}
+              </p>
+              <p
+                className="text-white text-2xl fade"
+                style={{ transitionDelay: "2s" }}
+              >
+                That&apos;s the most your conversations in 2024.
+              </p>
+            </div>
+            <div className="fade" style={{ transitionDelay: "3s" }}>
+              <ol className="list-decimal">
+                {results?.topReceivedConversations.map((conversation) => {
                   return (
                     <li
                       key={String(conversation.contact)}
