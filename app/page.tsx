@@ -52,7 +52,7 @@ export default function Home() {
       SELECT COUNT(*) FROM messages_2024;
       SELECT COUNT(*) FROM messages_2024 WHERE is_from_me = 1;
       SELECT COUNT(*) FROM message WHERE strftime('%Y', date / 1000000000, 'unixepoch', '+31 years') = '2023' AND is_from_me = 1;
-      SELECT trim(text), COUNT(*) FROM messages_2024 WHERE is_from_me = 1 AND text IS NOT NULL AND length(trim(text)) > 0 GROUP BY trim(text) ORDER BY COUNT(*) DESC LIMIT 5;
+      SELECT trim(text), COUNT(*) FROM messages_2024 WHERE is_from_me = 1 AND text IS NOT NULL AND length(trim(text)) > 0 GROUP BY trim(text) ORDER BY COUNT(*) DESC LIMIT 1;
       SELECT c.group_id, c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 1 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5;
       SELECT c.group_id, c.chat_identifier, c.display_name, COUNT(*) FROM messages_2024 m, chat_message_join j, chat c WHERE m.is_from_me = 0 AND m.ROWID = j.message_id AND c.ROWID = j.chat_id GROUP BY c.group_id ORDER BY COUNT(*) DESC LIMIT 5
     `);
@@ -66,6 +66,7 @@ export default function Home() {
     return {
       totalMessages: totalMessages as number,
       totalSentMessages: totalSentMessages as number,
+      totalSentMessagesPreviousYear: totalSentMessagesPreviousYear as number,
       change,
       changeDirection:
         (totalSentMessages as number) >
@@ -186,14 +187,16 @@ export default function Home() {
               You sent <Counter number={results?.totalSentMessages} /> messages
               this year.
             </div>
-            <div
-              className="text-white text-2xl text-balance fade"
-              style={{ transitionDelay: "2.75s" }}
-            >
-              That&apos;s a{" "}
-              <b>{numberFormatter.format(results?.change ?? 0)}%</b>{" "}
-              {results?.changeDirection} from last year.
-            </div>
+            {results?.totalSentMessagesPreviousYear === 0 ? null : (
+              <div
+                className="text-white text-2xl text-balance fade"
+                style={{ transitionDelay: "2.75s" }}
+              >
+                That&apos;s a{" "}
+                <b>{numberFormatter.format(results?.change ?? 0)}%</b>{" "}
+                {results?.changeDirection} from last year.
+              </div>
+            )}
           </div>
           <Button delay={3500} onClick={() => setShown(2)} />
         </Stage>
