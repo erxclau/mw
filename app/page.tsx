@@ -1,24 +1,13 @@
 "use client";
 
-import {
-  createContext,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import SQLJS, { type Database } from "sql.js";
 
 import Input from "./input";
 import Stage from "./stage";
 import Counter from "./counter";
 import { numberFormatter } from "./format";
-
-export const StageContext = createContext<{
-  stage: number | undefined;
-  shown: number | undefined;
-}>({ stage: undefined, shown: undefined });
+import { StageContext } from "./context";
 
 export default function Home() {
   const sql = useRef<SQLJS.SqlJsStatic>(null);
