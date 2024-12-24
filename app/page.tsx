@@ -20,8 +20,7 @@ export default function Home() {
 
   useEffect(() => {
     SQLJS({
-      locateFile: (file) =>
-        "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/" + file,
+      locateFile: (file) => location.href + file,
     })
       .then((r) => {
         sql.current = r;
