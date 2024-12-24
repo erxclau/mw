@@ -174,7 +174,7 @@ export default function Home() {
                   phone = "+1" + phone;
                 }
 
-                contacts.set(phone, contact[1] + " " + contact[2]);
+                contacts.set(phone, contact[1] + " " + (contact[2] || ""));
               }
 
               setContacts(contacts);
